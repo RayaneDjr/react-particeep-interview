@@ -6,6 +6,7 @@ import {
   setFilter,
   setItemsPerPage,
   setCurrentPage,
+  deleteMovie,
 } from "./store";
 
 const MovieList = () => {
@@ -28,6 +29,21 @@ const MovieList = () => {
         : [...filter, category]; // Add category if not in the filter
 
       dispatch(setFilter(newFilter));
+    }
+  };
+
+  const handleDeleteMovie = (movieId, movieCategory) => {
+    dispatch(deleteMovie(movieId));
+
+    // Check if the category is now empty
+    const remainingMoviesInCategory = movies.filter(
+      (movie) => movie.category === movieCategory && movie.id !== movieId
+    );
+    if (
+      remainingMoviesInCategory.length === 0 &&
+      filter.includes(movieCategory)
+    ) {
+      dispatch(setFilter([])); // Reset to "Tous" if category becomes empty
     }
   };
 
@@ -83,9 +99,14 @@ const MovieList = () => {
         ))}
       </div>
 
+      {paginatedMovies.length === 0 && <p>No more movies :(</p>}
       <div className='movie-list'>
         {paginatedMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            onDelete={() => handleDeleteMovie(movie.id, movie.category)}
+          />
         ))}
       </div>
 

@@ -1,21 +1,15 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  deleteMovie,
-  addLike,
-  deleteLike,
-  addDislike,
-  deleteDislike,
-} from "./store";
+import { addLike, deleteLike, addDislike, deleteDislike } from "./store";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, onDelete }) => {
   const [like, setLike] = useState(false);
   const [dislike, setDislike] = useState(false);
 
   const dispatch = useDispatch();
 
   const handleDelete = () => {
-    dispatch(deleteMovie(movie.id));
+    onDelete();
   };
 
   const handleToggleLike = () => {
