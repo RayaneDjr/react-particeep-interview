@@ -58,6 +58,22 @@ const moviesSlice = createSlice({
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     },
+    sortMoviesByLikes: (state, action) => {
+      const { order } = action.payload;
+      state.movies = [...state.movies].sort((a, b) => {
+        if (order === "asc") {
+          return a.likes - b.likes;
+        } else if (order === "desc") {
+          return b.likes - a.likes;
+        } else {
+          return 0; // Aucun tri
+        }
+      });
+    },
+    resetSorting: (state) => {
+      // Réinitialiser l'ordre des films à l'ordre par ID croissant
+      state.movies = [...state.movies].sort((a, b) => a.id.localeCompare(b.id));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,6 +102,8 @@ export const {
   setFilter,
   setItemsPerPage,
   setCurrentPage,
+  sortMoviesByLikes,
+  resetSorting,
 } = moviesSlice.actions;
 
 export const store = configureStore({

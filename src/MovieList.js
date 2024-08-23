@@ -7,6 +7,8 @@ import {
   setItemsPerPage,
   setCurrentPage,
   deleteMovie,
+  sortMoviesByLikes,
+  resetSorting,
 } from "./store";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
@@ -31,6 +33,15 @@ const MovieList = () => {
         : [...filter, category]; // Add category if not in the filter
 
       dispatch(setFilter(newFilter));
+    }
+  };
+
+  const handleSortChange = (event) => {
+    const value = event.target.value;
+    if (value === "none") {
+      dispatch(resetSorting());
+    } else {
+      dispatch(sortMoviesByLikes({ order: value }));
     }
   };
 
@@ -60,7 +71,7 @@ const MovieList = () => {
     dispatch(setCurrentPage(page));
   };
 
-  const filteredMovies = filter.length
+  let filteredMovies = filter.length
     ? movies.filter((movie) => filter.includes(movie.category))
     : movies;
 
@@ -103,6 +114,37 @@ const MovieList = () => {
             </label>
           </div>
         ))}
+      </div>
+
+      <div>
+        <label>
+          <input
+            type='radio'
+            name='sortLikes'
+            value='none'
+            onChange={handleSortChange}
+            defaultChecked
+          />
+          Aucun tri
+        </label>
+        <label>
+          <input
+            type='radio'
+            name='sortLikes'
+            value='asc'
+            onChange={handleSortChange}
+          />
+          Tri par nombre croissant de Likes
+        </label>
+        <label>
+          <input
+            type='radio'
+            name='sortLikes'
+            value='desc'
+            onChange={handleSortChange}
+          />
+          Tri par nombre décroissant de Likes
+        </label>
       </div>
 
       <div className='movie-list'>
