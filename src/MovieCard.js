@@ -18,6 +18,8 @@ const MovieCard = ({ movie, onDelete }) => {
   };
 
   const handleToggleLike = () => {
+    // Comportement du bouton like --> appuyer sur le bouton pour ajouter/supprimer like, si le film a été dislike supprime le dislike
+
     if (dislike) {
       dispatch(deleteDislike(movie.id));
       setDislike(!dislike);
@@ -33,6 +35,8 @@ const MovieCard = ({ movie, onDelete }) => {
   };
 
   const handleToggleDislike = () => {
+    // Comportement du bouton dislike --> appuyer sur le bouton pour ajouter/supprimer dislike, si le film a été like supprime le dislike
+
     if (like) {
       dispatch(deleteLike(movie.id));
       setLike(!like);

@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { movies$ } from "./movies";
 
+// fonction pour récupèrer les films
 export const fetchMovies = createAsyncThunk("movies/fetchMovies", async () => {
   const response = await movies$;
   return response;
@@ -66,15 +67,16 @@ const moviesSlice = createSlice({
         } else if (order === "desc") {
           return b.likes - a.likes;
         } else {
-          return 0; // Aucun tri
+          return 0; // Aucun tri (pas nécessaire mais empêche d'enventuels bugs)
         }
       });
     },
     resetSorting: (state) => {
-      // Réinitialiser l'ordre des films à l'ordre par ID croissant
+      // Réinitialise l'ordre des films par ID croissant
       state.movies = [...state.movies].sort((a, b) => a.id.localeCompare(b.id));
     },
   },
+  // ajoute des reducers pour l'action asynchrone fetchMovies()
   extraReducers: (builder) => {
     builder
       .addCase(fetchMovies.pending, (state) => {
@@ -82,7 +84,9 @@ const moviesSlice = createSlice({
       })
       .addCase(fetchMovies.fulfilled, (state, action) => {
         state.status = "succeeded";
+        // Met à jour la liste des films avec les données récupérées
         state.movies = action.payload;
+        // Met à jour la liste des catégories en extrayant les catégories uniques des films récupérés
         state.categories = [
           ...new Set(action.payload.map((movie) => movie.category)),
         ];

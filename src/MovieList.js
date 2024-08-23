@@ -26,11 +26,10 @@ const MovieList = () => {
 
   const handleCheckboxChange = (category) => {
     if (category === "Tous") {
-      dispatch(setFilter([])); // Clear the filter when "Tous" is checked
-    } else {
+      dispatch(setFilter([])); // vide le filtre quand "Tous" est selectionné
       const newFilter = filter.includes(category)
-        ? filter.filter((cat) => cat !== category) // Remove category if already in the filter
-        : [...filter, category]; // Add category if not in the filter
+        ? filter.filter((cat) => cat !== category) // supprime la catégorie si elle est déjà présente dans le filtre
+        : [...filter, category]; // ajoute la catégorie si elle n'est pas présente dans le filtre
 
       dispatch(setFilter(newFilter));
     }
@@ -39,16 +38,16 @@ const MovieList = () => {
   const handleSortChange = (event) => {
     const value = event.target.value;
     if (value === "none") {
-      dispatch(resetSorting());
+      dispatch(resetSorting()); // enlève le tri par like
     } else {
-      dispatch(sortMoviesByLikes({ order: value }));
+      dispatch(sortMoviesByLikes({ order: value })); // tri par like
     }
   };
 
   const handleDeleteMovie = (movieId, movieCategory) => {
     dispatch(deleteMovie(movieId));
 
-    // Check if the category is now empty
+    // Vérifie si la catégorie est maintenant vide
     const remainingMoviesInCategory = movies.filter(
       (movie) => movie.category === movieCategory && movie.id !== movieId
     );
@@ -56,7 +55,7 @@ const MovieList = () => {
       remainingMoviesInCategory.length === 0 &&
       filter.includes(movieCategory)
     ) {
-      dispatch(setFilter([])); // Reset to "Tous" if category becomes empty
+      dispatch(setFilter([])); // redirige l'utilisateur vers la catégorie "Tous" si la catégorie devient vide
     }
   };
 
@@ -71,6 +70,7 @@ const MovieList = () => {
     dispatch(setCurrentPage(page));
   };
 
+  // filtre les films par catégorie
   let filteredMovies = filter.length
     ? movies.filter((movie) => filter.includes(movie.category))
     : movies;
@@ -88,12 +88,14 @@ const MovieList = () => {
           <input
             type='checkbox'
             value='Tous'
-            checked={isAllChecked}
+            checked={isAllChecked} // empêche la catégorie "Tous" d'être sélectionnée en même temps qu'une autre catégorie
             onChange={() => handleCheckboxChange("Tous")}
           />
           Tous
           <div className='control__indicator'></div>
         </label>
+
+        {/* map dans catégorie pour un affichage dynamique */}
         {categories.map((category) => (
           <div className='checkbox-wrapper-21' key={category}>
             <label className='control control--checkbox'>
@@ -103,7 +105,7 @@ const MovieList = () => {
                 checked={isCategoryChecked(category)}
                 onChange={() => {
                   if (isAllChecked) {
-                    dispatch(setFilter([category])); // Start with only this category selected if "Tous" was previously checked
+                    dispatch(setFilter([category])); // commence par une seule catégorie sélectionnée si "Tous" était précedemment sélectionné
                   } else {
                     handleCheckboxChange(category);
                   }
@@ -116,9 +118,10 @@ const MovieList = () => {
         ))}
       </div>
 
-      <div>
+      <div className='sort'>
         <label>
           <input
+            className='radio'
             type='radio'
             name='sortLikes'
             value='none'
@@ -129,6 +132,7 @@ const MovieList = () => {
         </label>
         <label>
           <input
+            className='radio'
             type='radio'
             name='sortLikes'
             value='asc'
@@ -138,6 +142,7 @@ const MovieList = () => {
         </label>
         <label>
           <input
+            className='radio'
             type='radio'
             name='sortLikes'
             value='desc'
@@ -148,7 +153,10 @@ const MovieList = () => {
       </div>
 
       <div className='movie-list'>
+        {/* s'affiche si l'on supprime tous les films */}
         {paginatedMovies.length === 0 && <p>No more movies :(</p>}
+
+        {/* affichage dynamique des films selon le filtre et tri par like */}
         {paginatedMovies.map((movie) => (
           <div key={movie.id}>
             <MovieCard
@@ -161,23 +169,28 @@ const MovieList = () => {
 
       <div className='bottom'>
         <div className='pagination'>
+          {/* l'icone de navigation précédent ne s'affiche que si il existe encore des pages précédentes */}
           {currentPage > 1 && totalPages > 0 && (
             <NavigateBeforeIcon
               onClick={() => handlePageChange(currentPage - 1)}
               style={{ cursor: "pointer" }}
             />
           )}
+
+          {/* affiche bouton page 1, 2, 3.. */}
           {(() => {
             const pages = [];
             for (let i = 1; i <= totalPages; i++) {
               if (i === currentPage) {
                 pages.push(
+                  // page actuelle de l'utilisateur
                   <button key={i}>
                     <strong style={{ color: "#00a8e8" }}>{i}</strong>
                   </button>
                 );
               } else {
                 pages.push(
+                  // autres pages
                   <button
                     key={i}
                     onClick={() => handlePageChange(i)}
@@ -189,6 +202,8 @@ const MovieList = () => {
             }
             return pages;
           })()}
+
+          {/* l'icone de navigation suivant ne s'affiche que si il existe encore des pages suivantes */}
           {currentPage < totalPages && totalPages > 0 && (
             <NavigateNextIcon
               onClick={() => handlePageChange(currentPage + 1)}
@@ -199,6 +214,13 @@ const MovieList = () => {
 
         <div className='items-per-page'>
           <label>Items per page: </label>
+
+          {/* change le nombre films affichés et redirige l'utilisateur vers la page
+          1 pour éviter qu'il se retrouve sur une page inexistante (par exemple
+          si l'utilisateur était sur la page 3 avec 4 films affichés et qu'il
+          choisit d'afficher 12 films il se retrouvera sur la page 3 qui ne
+          contient aucun puisque tous les films tiennent sur la page 1 --> on
+          veut éviter cela */}
           <select
             onChange={(e) => {
               handleItemsPerPageChange(e);
