@@ -131,7 +131,7 @@ const MovieList = () => {
               if (i === currentPage) {
                 pages.push(
                   <button key={i}>
-                    <strong>{i}</strong>
+                    <strong style={{ color: "#00a8e8" }}>{i}</strong>
                   </button>
                 );
               } else {

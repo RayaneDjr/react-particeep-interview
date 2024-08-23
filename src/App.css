@@ -1,13 +1,22 @@
 body {
-  background-color: #00171f;
+  background-color: black;
   color: white;
   margin: 0;
   padding: 0;
 }
 
 .title {
-  text-align: center;
-  color: #fff5ee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  border-bottom: solid 1px gray;
+  width: 90%;
+  margin: auto;
+  height: 100px;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
 }
 
 .movie-list {
@@ -17,15 +26,18 @@ body {
   width: 80%;
   margin: auto;
   justify-content: center;
-  gap: 16px;
+  gap: 30px;
 }
 
 .movie-card {
+  -webkit-box-shadow: 0px 0px 8px 4px rgba(128, 128, 128, 1);
+  -moz-box-shadow: 0px 0px 8px 4px rgba(128, 128, 128, 1);
+  box-shadow: 0px 0px 8px 4px rgba(128, 128, 128, 1);
   width: 200px;
   box-sizing: border-box;
   border-radius: 8px;
   padding: 16px;
-  background-color: #14213d;
+  background-color: black;
 }
 
 .like-bar {
@@ -48,12 +60,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px;
-  background-color: #00171f;
+  padding: 6px 10px 6px 10px;
+  background-color: #36454f;
+}
+
+.likes:hover,
+.dislikes:hover {
+  background-color: gray;
 }
 
 .likes {
-  border-radius: 6px 0 0 6px;
+  border-radius: 20px 0 0 20px;
   position: relative;
 }
 
@@ -67,7 +84,7 @@ body {
 }
 
 .dislikes {
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 20px 20px 0;
 }
 
 .bottom {

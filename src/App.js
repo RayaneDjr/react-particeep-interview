@@ -8,7 +8,12 @@ function App() {
   return (
     <Provider store={store}>
       <div className='App'>
-        <h1 className='title'>Movie List</h1>
+        <div className='title'>
+          <p>
+            <span style={{ color: "#00a8e8" }}>M</span>ovie{" "}
+            <span style={{ color: "#00a8e8" }}>L</span>ist
+          </p>
+        </div>
         <MovieList />
       </div>
     </Provider>
