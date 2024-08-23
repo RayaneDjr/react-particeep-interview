@@ -188,7 +188,7 @@ body {
 }
 
 /* responsive */
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .filter,
   .sort {
     flex-direction: column;
