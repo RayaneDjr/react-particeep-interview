@@ -8,7 +8,7 @@ function App() {
   return (
     <Provider store={store}>
       <div className='App'>
-        <h1>Movie List</h1>
+        <h1 className='title'>Movie List</h1>
         <MovieList />
       </div>
     </Provider>

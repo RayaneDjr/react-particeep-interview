@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addLike, deleteLike, addDislike, deleteDislike } from "./store";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const MovieCard = ({ movie, onDelete }) => {
   const [like, setLike] = useState(false);
@@ -50,23 +55,66 @@ const MovieCard = ({ movie, onDelete }) => {
         <div
           style={{
             width: `${(movie.likes / (movie.likes + movie.dislikes)) * 100}%`,
-            backgroundColor: "green",
-          }}>
-          {movie.likes}
-        </div>
+            backgroundColor: "#00a8e8",
+            transition: "all 0.5s",
+          }}
+        />
         <div
           style={{
             width: `${
               (movie.dislikes / (movie.likes + movie.dislikes)) * 100
             }%`,
-            backgroundColor: "red",
-          }}>
-          {movie.dislikes}
+            backgroundColor: "#e80033",
+            transition: "all 0.5s",
+          }}
+        />
+      </div>
+      <div className='buttonsContainer'>
+        <div style={{ display: "flex" }}>
+          <div onClick={handleToggleLike} className='likes'>
+            {like ? (
+              <ThumbUpAltIcon
+                style={{
+                  color: "#00a8e8",
+                  marginRight: "4px",
+                }}
+              />
+            ) : (
+              <ThumbUpOffAltIcon
+                style={{
+                  color: "#00a8e8",
+                  marginRight: "4px",
+                }}
+              />
+            )}
+            {movie.likes}
+          </div>
+          <div onClick={handleToggleDislike} className='dislikes'>
+            {dislike ? (
+              <ThumbDownAltIcon
+                style={{
+                  color: "#e80033",
+                  marginRight: "4px",
+                }}
+              />
+            ) : (
+              <ThumbDownOffAltIcon
+                style={{
+                  color: "#e80033",
+                  marginRight: "4px",
+                }}
+              />
+            )}
+            {movie.dislikes}
+          </div>
+        </div>
+        <div>
+          <DeleteOutlineIcon
+            onClick={handleDelete}
+            style={{ color: "#e80033", cursor: "pointer" }}
+          />
         </div>
       </div>
-      <button onClick={handleToggleLike}>Toggle Like</button>
-      <button onClick={handleToggleDislike}>Toggle Dislike</button>
-      <button onClick={handleDelete}>Delete</button>
     </div>
   );
 };

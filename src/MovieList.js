@@ -8,6 +8,8 @@ import {
   setCurrentPage,
   deleteMovie,
 } from "./store";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 const MovieList = () => {
   const dispatch = useDispatch();
@@ -70,8 +72,8 @@ const MovieList = () => {
 
   return (
     <div>
-      <div className='filter'>
-        <label>
+      <div className='filter checkbox-wrapper-21'>
+        <label className='control control--checkbox'>
           <input
             type='checkbox'
             value='Tous'
@@ -79,79 +81,93 @@ const MovieList = () => {
             onChange={() => handleCheckboxChange("Tous")}
           />
           Tous
+          <div className='control__indicator'></div>
         </label>
         {categories.map((category) => (
-          <label key={category}>
-            <input
-              type='checkbox'
-              value={category}
-              checked={isCategoryChecked(category)}
-              onChange={() => {
-                if (isAllChecked) {
-                  dispatch(setFilter([category])); // Start with only this category selected if "Tous" was previously checked
-                } else {
-                  handleCheckboxChange(category);
-                }
-              }}
-            />
-            {category}
-          </label>
+          <div className='checkbox-wrapper-21' key={category}>
+            <label className='control control--checkbox'>
+              <input
+                type='checkbox'
+                value={category}
+                checked={isCategoryChecked(category)}
+                onChange={() => {
+                  if (isAllChecked) {
+                    dispatch(setFilter([category])); // Start with only this category selected if "Tous" was previously checked
+                  } else {
+                    handleCheckboxChange(category);
+                  }
+                }}
+              />
+              {category}
+              <div className='control__indicator'></div>
+            </label>
+          </div>
         ))}
       </div>
 
-      {paginatedMovies.length === 0 && <p>No more movies :(</p>}
       <div className='movie-list'>
+        {paginatedMovies.length === 0 && <p>No more movies :(</p>}
         {paginatedMovies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-            onDelete={() => handleDeleteMovie(movie.id, movie.category)}
-          />
+          <div key={movie.id}>
+            <MovieCard
+              movie={movie}
+              onDelete={() => handleDeleteMovie(movie.id, movie.category)}
+            />
+          </div>
         ))}
       </div>
 
-      <div className='pagination'>
-        <button
-          disabled={currentPage === 1 || totalPages === 0}
-          onClick={() => handlePageChange(currentPage - 1)}>
-          Previous
-        </button>
-        {(() => {
-          const pages = [];
-          for (let i = 1; i <= totalPages; i++) {
-            if (i === currentPage) {
-              pages.push(
-                <button>
-                  <strong>{i}</strong>
-                </button>
-              );
-            } else {
-              pages.push(
-                <button onClick={() => handlePageChange(i)}>{i}</button>
-              );
+      <div className='bottom'>
+        <div className='pagination'>
+          {currentPage > 1 && totalPages > 0 && (
+            <NavigateBeforeIcon
+              onClick={() => handlePageChange(currentPage - 1)}
+              style={{ cursor: "pointer" }}
+            />
+          )}
+          {(() => {
+            const pages = [];
+            for (let i = 1; i <= totalPages; i++) {
+              if (i === currentPage) {
+                pages.push(
+                  <button key={i}>
+                    <strong>{i}</strong>
+                  </button>
+                );
+              } else {
+                pages.push(
+                  <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    style={{ cursor: "pointer" }}>
+                    {i}
+                  </button>
+                );
+              }
             }
-          }
-          return pages;
-        })()}
-        <button
-          disabled={currentPage === totalPages || totalPages === 0}
-          onClick={() => handlePageChange(currentPage + 1)}>
-          Next
-        </button>
-      </div>
+            return pages;
+          })()}
+          {currentPage < totalPages && totalPages > 0 && (
+            <NavigateNextIcon
+              onClick={() => handlePageChange(currentPage + 1)}
+              style={{ cursor: "pointer" }}
+            />
+          )}
+        </div>
 
-      <div className='items-per-page'>
-        <label>Items per page: </label>
-        <select
-          onChange={(e) => {
-            handleItemsPerPageChange(e);
-            handlePageChange(1, e);
-          }}
-          value={itemsPerPage}>
-          <option value='4'>4</option>
-          <option value='8'>8</option>
-          <option value='12'>12</option>
-        </select>
+        <div className='items-per-page'>
+          <label>Items per page: </label>
+          <select
+            onChange={(e) => {
+              handleItemsPerPageChange(e);
+              handlePageChange(1, e);
+            }}
+            value={itemsPerPage}>
+            <option value='4'>4</option>
+            <option value='8'>8</option>
+            <option value='12'>12</option>
+          </select>
+        </div>
       </div>
     </div>
   );
